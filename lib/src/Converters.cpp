@@ -1,24 +1,27 @@
-#include "../include/Converters.h"
+#include <Converters.h>
 #include <algorithm>
 #include <cmath>
 
 using namespace ColorModels;
 
-float Convert::Round(float number, uint8_t decimalNumbers) {
+/* float Convert::Round(float number, uint8_t decimalNumbers) {
   float roundingPart = float(std::pow(10, decimalNumbers));
   return std::round(number * roundingPart) / roundingPart;
-}
+} */
+
 // Done
-YUV Convert::RgbToYuv(const RGB &rgb) {
+YUV Convert::RgbToYuv(RGB &rgb) {
+  rgb.Clamp();
   YUV yuv;
-  yuv.y = Round(Kr * rgb.r + (1 - Kr - Kb) * rgb.g + Kb * rgb.b, 0);
-  yuv.u = Round(rgb.b - yuv.y, 0);
-  yuv.v = Round(rgb.r - yuv.y, 0);
+  yuv.y = std::ceil(Kr * rgb.r + (1 - Kr - Kb) * rgb.g + Kb * rgb.b);
+  yuv.u = std::ceil(rgb.b - yuv.y);
+  yuv.v = std::ceil(rgb.r - yuv.y);
   return yuv;
 }
 
 // Done
-HSV Convert::RgbToHsv(const RGB &rgb) {
+HSV Convert::RgbToHsv(RGB &rgb) {
+  rgb.Clamp();
   HSV hsv;
   float r = float(rgb.r / 255.0);
   float g = float(rgb.g / 255.0);
@@ -27,10 +30,10 @@ HSV Convert::RgbToHsv(const RGB &rgb) {
   float min = std::min({r, g, b});
   float diff = max - min;
 #pragma region "Value"
-  hsv.value = Round(max * float(100.0), 0);
+  hsv.value = max * 100;
 #pragma endregion
 #pragma region "Saturation"
-  hsv.saturation = max == 0 ? 0 : Round(((1 - min / max) * float(100.0)), 1);
+  hsv.saturation = max == 0 ? 0 : (1 - min / max) * float(100.0);
 #pragma endregion
 
 #pragma region "Hue"
@@ -46,22 +49,27 @@ HSV Convert::RgbToHsv(const RGB &rgb) {
 }
 
 // Done
-RGB Convert::YuvToRgb(const YUV &yuv) {
+RGB Convert::YuvToRgb(YUV &yuv) {
+  yuv.Clamp();
   uint8_t r = yuv.y + yuv.v;
   uint8_t g = yuv.y - (Kr * yuv.v + Kb * yuv.u) / (1 - Kr - Kb);
   uint8_t b = yuv.y + yuv.u;
   return RGB{r, g, b};
 }
 // Done
-HSV Convert::YuvToHsv(const YUV &yuv) { return RgbToHsv(YuvToRgb(yuv)); }
+HSV Convert::YuvToHsv(YUV &yuv) {
+  RGB rgb = YuvToRgb(yuv);
+  return RgbToHsv(rgb);
+}
 
 // Done
-RGB Convert::HsvToRgb(const HSV &hsv) {
-  float C = hsv.value / 100 * hsv.saturation / 100;
+RGB Convert::HsvToRgb(HSV &hsv) {
+  hsv.Clamp();
+  float C = hsv.value / float(100.0) * hsv.saturation / float(100.0);
 
   float X =
       C * (1 - std::abs(std::fmod(hsv.hue / float(60.0), float(2.0)) - 1));
-  float m = hsv.value / 100 - C;
+  float m = hsv.value / float(100.0) - C;
 
   float R, G, B;
   if (hsv.hue >= 0 && hsv.hue < 60) {
@@ -96,4 +104,8 @@ RGB Convert::HsvToRgb(const HSV &hsv) {
 }
 
 // Done
-YUV Convert::HsvToYuv(const HSV &hsv) { return RgbToYuv(HsvToRgb(hsv)); }
+YUV Convert::HsvToYuv(HSV &hsv) {
+  hsv.Clamp();
+  RGB rgb = HsvToRgb(hsv);
+  return RgbToYuv(rgb);
+}
