@@ -4,11 +4,6 @@
 
 using namespace ColorModels;
 
-/* float Convert::Round(float number, uint8_t decimalNumbers) {
-  float roundingPart = float(std::pow(10, decimalNumbers));
-  return std::round(number * roundingPart) / roundingPart;
-} */
-
 // Done
 YUV Convert::RgbToYuv(RGB &rgb) {
   rgb.Clamp();
