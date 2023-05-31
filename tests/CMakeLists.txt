@@ -38,6 +38,7 @@ target_link_libraries(${PROJECT_NAME}
     GTest::GTest GTest::Main
 )
 
+add_test(NAME ${PROJECT_NAME} COMMAND $<TARGET_FILE:${PROJECT_NAME}>)
 
 ################################################################################
 # Compilation flags
