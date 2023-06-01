@@ -5,8 +5,7 @@
 using namespace ColorModels;
 
 // Done
-YUV Convert::RgbToYuv(RGB &rgb) {
-  rgb.Clamp();
+YUV Convert::RgbToYuv(RGB rgb) {
   YUV yuv;
   yuv.y = std::ceil(Kr * rgb.r + (1 - Kr - Kb) * rgb.g + Kb * rgb.b);
   yuv.u = std::ceil(rgb.b - yuv.y);
@@ -15,8 +14,7 @@ YUV Convert::RgbToYuv(RGB &rgb) {
 }
 
 // Done
-HSV Convert::RgbToHsv(RGB &rgb) {
-  rgb.Clamp();
+HSV Convert::RgbToHsv(RGB rgb) {
   HSV hsv;
   float r = float(rgb.r / 255.0);
   float g = float(rgb.g / 255.0);
@@ -44,7 +42,7 @@ HSV Convert::RgbToHsv(RGB &rgb) {
 }
 
 // Done
-RGB Convert::YuvToRgb(YUV &yuv) {
+RGB Convert::YuvToRgb(YUV yuv) {
   yuv.Clamp();
   uint8_t r = yuv.y + yuv.v;
   uint8_t g = yuv.y - (Kr * yuv.v + Kb * yuv.u) / (1 - Kr - Kb);
@@ -52,13 +50,13 @@ RGB Convert::YuvToRgb(YUV &yuv) {
   return RGB{r, g, b};
 }
 // Done
-HSV Convert::YuvToHsv(YUV &yuv) {
+HSV Convert::YuvToHsv(YUV yuv) {
   RGB rgb = YuvToRgb(yuv);
   return RgbToHsv(rgb);
 }
 
 // Done
-RGB Convert::HsvToRgb(HSV &hsv) {
+RGB Convert::HsvToRgb(HSV hsv) {
   hsv.Clamp();
   float C = hsv.value / float(100.0) * hsv.saturation / float(100.0);
 
@@ -99,7 +97,7 @@ RGB Convert::HsvToRgb(HSV &hsv) {
 }
 
 // Done
-YUV Convert::HsvToYuv(HSV &hsv) {
+YUV Convert::HsvToYuv(HSV hsv) {
   hsv.Clamp();
   RGB rgb = HsvToRgb(hsv);
   return RgbToYuv(rgb);

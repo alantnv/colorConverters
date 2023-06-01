@@ -10,11 +10,10 @@ using namespace ColorModels;
  */
 class Convert {
 public:
-  static YUV RgbToYuv(RGB &rgb);
-  static HSV RgbToHsv(RGB &rgb);
-  static RGB YuvToRgb(YUV &yuv);
-  static HSV YuvToHsv(YUV &yuv);
-  static RGB HsvToRgb(HSV &hsv);
-  static YUV HsvToYuv(HSV &hsv);
-  static float Round(float number, uint8_t decimalNumbers);
+  static YUV RgbToYuv(RGB rgb);
+  static HSV RgbToHsv(RGB rgb);
+  static RGB YuvToRgb(YUV yuv);
+  static HSV YuvToHsv(YUV yuv);
+  static RGB HsvToRgb(HSV hsv);
+  static YUV HsvToYuv(HSV hsv);
 };
