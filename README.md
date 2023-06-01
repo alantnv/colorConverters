@@ -1,3 +1,5 @@
+[![CMake](https://github.com/alantnv/colorConverters/actions/workflows/cmake.yml/badge.svg)](https://github.com/alantnv/colorConverters/actions/workflows/cmake.yml)
+
 ### Available converters:<br>
 #### RGB to YUV <br>
 #### RGB to HSV <br>
